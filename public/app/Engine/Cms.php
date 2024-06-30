@@ -3,6 +3,7 @@
 namespace App\Engine;
 
 use App\Engine\Helper\Common;
+
 class Cms
 {
     private $di;
@@ -17,12 +18,12 @@ class Cms
     public function run()
     {
         $this->router->add('home', '/', 'HomeController:index');
-        $this->router->add('product', '/user/12', 'ProductController:index');
-        $routerDispatch = $this->router->dispatch(Common::getMethod(),Common::getPathUrl());
+        $this->router->add('product', '/news', 'HomeController:news');
 
+        $routerDispatch = $this->router->dispatch(Common::getMethod(), Common::getPathUrl());
 
-//        print_r($this->di);
-        print_r($routerDispatch);
-
+        list($class, $action) = explode(':', $routerDispatch->getController(), 2);
+        $controller = '\\App\\cms\\Controller\\' . $class;
+        call_user_func_array([new $controller($this->di), $action], [$routerDispatch->getParameters()]);
     }
 }
