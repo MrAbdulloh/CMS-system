@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Engine;
+
+use App\Engine\Helper\Common;
 class Cms
 {
     private $di;
@@ -15,7 +17,12 @@ class Cms
     public function run()
     {
         $this->router->add('home', '/', 'HomeController:index');
-        print_r($this->di);
+        $this->router->add('product', '/user/12', 'ProductController:index');
+        $routerDispatch = $this->router->dispatch(Common::getMethod(),Common::getPathUrl());
+
+
+//        print_r($this->di);
+        print_r($routerDispatch);
 
     }
 }
