@@ -2,6 +2,7 @@
 
 namespace App\Engine;
 
+use App\Engine\Core\Router\DispatchedRoute;
 use App\Engine\Helper\Common;
 
 class Cms
@@ -17,13 +18,17 @@ class Cms
 
     public function run()
     {
-        $this->router->add('home', '/', 'HomeController:index');
-        $this->router->add('product', '/news', 'HomeController:news');
+        try {
+            $this->router->add('home', '/', 'HomeController:index');
+            $this->router->add('product', '/news', 'HomeController:news');
 
-        $routerDispatch = $this->router->dispatch(Common::getMethod(), Common::getPathUrl());
+            $routerDispatch = $this->router->dispatch(Common::getMethod(), Common::getPathUrl());
 
-        list($class, $action) = explode(':', $routerDispatch->getController(), 2);
-        $controller = '\\App\\cms\\Controller\\' . $class;
-        call_user_func_array([new $controller($this->di), $action], [$routerDispatch->getParameters()]);
+            list($class, $action) = explode(':', $routerDispatch->getController(), 2);
+            $controller = '\\App\\cms\\Controller\\' . $class;
+            call_user_func_array([new $controller($this->di), $action], [$routerDispatch->getParameters()]);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

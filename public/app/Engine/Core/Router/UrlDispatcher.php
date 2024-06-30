@@ -50,11 +50,12 @@ class UrlDispatcher
     private function doDispatch($method, $uri)
     {
         foreach ($this->routes($method) as $route => $controller) {
-            $pattern = '#^' . $route . '$$s';
+            $pattern = '#^' . $route . '$#s';
 
             if (preg_match($pattern, $uri, $parameters)) {
                 return new DispatchedRoute($controller, $parameters);
             }
         }
+        throw new \Exception('Route not found: ' . $uri);
     }
 }
